@@ -24,7 +24,6 @@ else:
 
 clearx()
 
-print("Installing default applications...\n")
 if input("Do you require virtualization? [y/N]: ") == "y":
     installnc(importantApps + " virtualbox linux-headers")
 else:
