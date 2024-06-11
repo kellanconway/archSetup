@@ -30,6 +30,8 @@ else:
     installnc(importantApps)
 finstall("spotify -y")
 
+clearx()
+
 de = input("prefered desktop environment?: ")
 
 if de == "gnome":
