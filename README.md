@@ -1,6 +1,8 @@
 use this on a fresh arch linux install
 
-kind of makes more like debian
+kind of makes it more like debian
+
+requires internet connection
 
 ```
 sudo pacman -S python3 git \ 
