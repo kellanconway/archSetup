@@ -1,11 +1,9 @@
-use this on a fresh arch linux install
+I made this repo mostly for me so I can use curl on a fresh install
 
-kind of makes it more like debian
-
-requires internet connection
+in case you want to try it for yourself 
 
 ```
-sudo pacman -S python3 git \ 
-&& git clone https://github.com/kellanconway/archSetup \
-&& python3 archSetup/archSetup.py
+curl -o https://github.com/kellanconway/archSetup/archSetup.bash \
+chmod +x archSetup.bash \
+./archSetup.bash
 ```
