@@ -1,6 +1,6 @@
 import os
     
-importantApps = "flatpak git discord neovim firefox"
+importantApps = "bluez flatpak git discord neovim firefox"
 
 def clear():
     os.system("clear")
@@ -32,6 +32,7 @@ elif vir == "s":
     print("skipped")
 else:
     installnc(importantApps)
+    os.system("sudo systemctl enable bluetooth.service && sudo systemctl start bluetooth.service")
     finstall("spotify -y")
 
 clearx()
