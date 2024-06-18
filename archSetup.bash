@@ -3,6 +3,7 @@
 clear 
 
 apps="bluez flatpak git discord neovim firefox"
+dmdefault="empty"
 
 read -p "Welcome to the Arch Setup Assistant!
 At any prompt in the setup simply enter 's' to skip 
@@ -41,14 +42,15 @@ fi
 clear
 
 read -p "Would like to install app list?
-includes $apps [Y/n]: " appask
+includes $apps spotify(flatpak) [Y/n]: " appask
 
 if [ $appask == "n" ]; then
-elif [ $appask == "s"]; then
+elif [ $appask == "s" ]; then
   echo "skipped"
 else
   sudo pacman -S $apps --noconfirm
-  flatpak install 
+  flatpak install spotify -y
+  sudo systemctl enable bluetooth
 fi
 
 clear
@@ -59,44 +61,57 @@ if [ de == "s" ]; then
   echo "skipped"
 elif [ $de == "kde" ]; then
   read -p "Would you prefer a minimal installation? [y/N]: " kdeMin
-  if [ $kdeMin == "y"]; then
+  if [ $kdeMin == "y" ]; then
     sudo pacman -S plasma-desktop konsole --noconfirm
   else
     sudo pacman -S plasma --noconfirm
   fi
-elif [ $de == "gnome" ] || [ $de == "mate" ] || [ $de == "deepin" ]
+  dmdefault="sddm"
+elif [ $de == "gnome" ] || [ $de == "mate" ] || [ $de == "deepin" ]; then
   read -p "Would you like extra $de applications? [y/N]: " extra
   sudo pacman -S $de --noconfirm
   if [ $de == "deepin" ]; then
     sudo pacman -S deepin-kwin --noconfirm
+    dmdefault="lightdm lightdm-deepin-greeter"
   elif [ $de == "gnome" ]; then
     sudo pacman -S gnome-tweaks
-    if [ $appask == "y" ]; then
+    dmdefault="gdm"
+    if [ $appask == "y" ]; then 
       flatpak install org.install.Platform -y
     fi
   fi
   if [ $extra == "y" ]; then
     sudo pacman -S ${de}-extra --noconfirm
   fi
-elif [ $de == "budgie"]; then 
+elif [ $de == "budgie" ]; then 
   sudo pacman -S budgie nautilus --noconfirm
 fi
 
 clear
 
-read -p "prefered display manager?: " dm
-
-if [ $dm == "s" ]; then
-  echo "skipped"
+if [ $dmdefault == "empty" ]; then
+  read -p "prefered display manager?: " dm
 else
-  if [ appask == "y" ]; then
-    sudo systemctl enable bluetooth
-    sudo systemctl enable bluetooth
+  read -p "Would you like to install the default display manager? ($dmdefault) [Y/n]: " dfltconfirm
+  if [ $dfltconfirm == "s" ]; then
+    echo "skipped"
+  elif [ $dfltconfirm == "n" ]; then
+    read -p "prefered display manager?: " dm
+  else
+    dm=$dmdefault
   fi
-  sudo pacman -S $dm --noconfirm
-  sudo systemctl enable $dm
-  sudo systemctl start $dm
 fi
 
-
-
+if [ $dfltconfirm == "s" ]; then 
+elif [ $dm == "s" ]; then
+  echo "skipped"
+else
+  sudo pacman -S $dm
+  if [ $dm == "lightdm" ]; then
+    sudo pacman -Ss lighdm | grep lightdm
+    echo "please choose one of these"
+    read -p "lightdm-" greeter
+    sudo pacman -S lightdm-$greeter
+  else
+  fi
+fi
